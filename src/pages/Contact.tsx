@@ -1,49 +1,182 @@
-import React from "react";
+// import React, { useState } from 'react';
+// import { Container, Row, Col, Form, Button, Alert, Card } from 'react-bootstrap';
+// import { Envelope, Telephone, GeoAlt, Send } from 'react-bootstrap-icons';
+// import { Formik } from 'formik';
+// import * as Yup from 'yup';
 
+// const ContactSchema = Yup.object().shape({
+//   name: Yup.string().required('Ce champ est requis'),
+//   email: Yup.string().email('Email invalide').required('Ce champ est requis'),
+//   message: Yup.string().required('Ce champ est requis').min(20, 'Minimum 20 caractères')
+// });
 
-function Contact() {
+// const Contact: React.FC = () => {
+//   const [submitted, setSubmitted] = useState(false);
+
+//   return (
+//     <Container className="my-5">
+//       <Row className="justify-content-center">
+//         <Col lg={8}>
+//           <h1 className="text-center mb-5">Contactez-Nous</h1>
+          
+//           <Row className="g-4 mb-5">
+//             <Col md={4}>
+//               <div className="d-flex align-items-center mb-3">
+//                 <Envelope size={24} className="text-primary me-3" />
+//                 <div>
+//                   <h5>Email</h5>
+//                   <p className="mb-0">contact@smartqueue.tn</p>
+//                 </div>
+//               </div>
+//             </Col>
+//             <Col md={4}>
+//               <div className="d-flex align-items-center mb-3">
+//                 <Telephone size={24} className="text-primary me-3" />
+//                 <div>
+//                   <h5>Téléphone</h5>
+//                   <p className="mb-0">+216 70 123 456</p>
+//                 </div>
+//               </div>
+//             </Col>
+//             <Col md={4}>
+//               <div className="d-flex align-items-center mb-3">
+//                 <GeoAlt size={24} className="text-primary me-3" />
+//                 <div>
+//                   <h5>Adresse</h5>
+//                   <p className="mb-0">Tunis, Tunisia</p>
+//                 </div>
+//               </div>
+//             </Col>
+//           </Row>
+
+//           {submitted ? (
+//             <Alert variant="success" className="text-center">
+//               Merci pour votre message! Nous vous contacterons bientôt.
+//             </Alert>
+//           ) : (
+//             <Card className="shadow-sm">
+//               <Card.Body>
+//                 <Formik
+//                   initialValues={{ name: '', email: '', message: '' }}
+//                   validationSchema={ContactSchema}
+//                   onSubmit={(values, { setSubmitting }) => {
+//                     setTimeout(() => {
+//                       console.log(values); // Ici vous enverriez les données à votre API
+//                       setSubmitted(true);
+//                       setSubmitting(false);
+//                     }, 400);
+//                   }}
+//                 >
+//                   {({
+//                     values,
+//                     errors,
+//                     touched,
+//                     handleChange,
+//                     handleBlur,
+//                     handleSubmit,
+//                     isSubmitting
+//                   }) => (
+//                     <Form onSubmit={handleSubmit} >
+//                       <Form.Group className="mb-3">
+//                         <Form.Label>Nom Complet</Form.Label>
+//                         <Form.Control
+//                           type="text"
+//                           name="name"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.name}
+//                           isInvalid={touched.name && !!errors.name}
+//                         />
+//                         <Form.Control.Feedback type="invalid">
+//                           {errors.name}
+//                         </Form.Control.Feedback>
+//                       </Form.Group>
+
+//                       <Form.Group className="mb-3">
+//                         <Form.Label>Email</Form.Label>
+//                         <Form.Control
+//                           type="email"
+//                           name="email"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.email}
+//                           isInvalid={touched.email && !!errors.email}
+//                         />
+//                         <Form.Control.Feedback type="invalid">
+//                           {errors.email}
+//                         </Form.Control.Feedback>
+//                       </Form.Group>
+
+//                       <Form.Group className="mb-3">
+//                         <Form.Label>Message</Form.Label>
+//                         <Form.Control
+//                           as="textarea"
+//                           rows={5}
+//                           name="message"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.message}
+//                           isInvalid={touched.message && !!errors.message}
+//                         />
+//                         <Form.Control.Feedback type="invalid">
+//                           {errors.message}
+//                         </Form.Control.Feedback>
+//                       </Form.Group>
+
+//                       <div className="d-grid">
+//                         <Button 
+//                           variant="primary" 
+//                           type="submit" 
+//                           disabled={isSubmitting}
+//                         >
+//                           <Send className="me-2" />
+//                           {isSubmitting ? 'Envoi en cours...' : 'Envoyer Message'}
+//                         </Button>
+//                       </div>
+//                     </Form>
+//                   )}
+//                 </Formik>
+//               </Card.Body>
+//             </Card>
+//           )}
+//         </Col>
+//       </Row>
+//     </Container>
+//   );
+// };
+
+// export default Contact;
+
+import React from 'react';
+
+export default function Contact() {
   return (
-    <div className="Contact" style={{ display: "flex", justifyContent: "center", padding: "2rem" }}>
-      <form
-        name="contact"
-        method="POST"
-        data-netlify="true"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          maxWidth: "400px",
-          width: "100%",
-        }}
-      >
-        {/* Required for Netlify */}
-        <input type="hidden" name="form-name" value="contact" />
+    <div>
+      <h1>Contact Page</h1>
+      <p>This is the contact page.</p>
+      <form 
+      name="contact"
+      method="POST" 
+      data-netlify="true"
+      onSubmit={(e) => { e.preventDefault(); console.log('Form submitted'); }}>
+      <input type="hidden" name="form-name" value="contact" />
+      <div>
+        <label>Name:</label>
+        <input type="text" name="name" required />
+      </div>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Your name"
-          required
-        />
+      <div>
+        <label htmlFor="email">email</label><br ></br>
+        <input type="email" name="email"  id="email" required />
+      </div>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Your email"
-          required
-        />
-
-        <textarea
-          name="message"
-          placeholder="Your message"
-          rows={6}
-          required
-        ></textarea>
-
-        <button type="submit">Send</button>
+      <div>
+        <label >any comments</label><br ></br>
+        <textarea  name="comments"></textarea>
+      </div>
+      
+      <button type="submit">Submit</button>  
       </form>
     </div>
-  );
+);
 }
-
-export default Contact;
