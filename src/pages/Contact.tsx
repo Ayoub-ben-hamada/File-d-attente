@@ -1,154 +1,189 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Button, Alert, Card, Form as BootstrapForm } from 'react-bootstrap';
 import { Envelope, Telephone, GeoAlt, Send } from 'react-bootstrap-icons';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-
-const ContactSchema = Yup.object().shape({
-  name: Yup.string().required('Ce champ est requis'),
-  email: Yup.string().email('Email invalide').required('Ce champ est requis'),
-  message: Yup.string().required('Ce champ est requis').min(20, 'Minimum 20 caractères')
-});
+import styled from 'styled-components';
 
 const Contact: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <Container className="my-5">
-      <Row className="justify-content-center">
-        <Col lg={8}>
-          <h1 className="text-center mb-5">Contactez-Nous</h1>
+    <ContactContainer>
+      <ContactHeader>
+        <h1>Contactez-Nous</h1>
+      </ContactHeader>
 
-          <Row className="g-4 mb-5">
-            <Col md={4}>
-              <div className="d-flex align-items-center mb-3">
-                <Envelope size={24} className="text-primary me-3" />
-                <div>
-                  <h5>Email</h5>
-                  <p className="mb-0">contact@smartqueue.tn</p>
-                </div>
-              </div>
-            </Col>
-            <Col md={4}>
-              <div className="d-flex align-items-center mb-3">
-                <Telephone size={24} className="text-primary me-3" />
-                <div>
-                  <h5>Téléphone</h5>
-                  <p className="mb-0">+216 70 123 456</p>
-                </div>
-              </div>
-            </Col>
-            <Col md={4}>
-              <div className="d-flex align-items-center mb-3">
-                <GeoAlt size={24} className="text-primary me-3" />
-                <div>
-                  <h5>Adresse</h5>
-                  <p className="mb-0">Tunis, Tunisia</p>
-                </div>
-              </div>
-            </Col>
-          </Row>
+      <ContactInfo>
+        <InfoItem>
+          <Envelope size={24} className="icon" />
+          <div>
+            <h5>Email</h5>
+            <p>contact@smartqueue.tn</p>
+          </div>
+        </InfoItem>
+        <InfoItem>
+          <Telephone size={24} className="icon" />
+          <div>
+            <h5>Téléphone</h5>
+            <p>+216 70 123 456</p>
+          </div>
+        </InfoItem>
+        <InfoItem>
+          <GeoAlt size={24} className="icon" />
+          <div>
+            <h5>Adresse</h5>
+            <p>Tunis, Tunisia</p>
+          </div>
+        </InfoItem>
+      </ContactInfo>
 
-          {submitted ? (
-            <Alert variant="success" className="text-center">
-              Merci pour votre message! Nous vous contacterons bientôt.
-            </Alert>
-          ) : (
-            <Card className="shadow-sm">
-              <Card.Body>
-                <Formik
-                  initialValues={{ name: '', email: '', message: '' }}
-                  validationSchema={ContactSchema}
-                  onSubmit={(values, { setSubmitting }) => {
-                    // Netlify handles this form submission
-                    setSubmitting(true);
-                    setSubmitted(true);
-                  }}
-                >
-                  {({
-                    values,
-                    errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
-                    isSubmitting
-                  }) => (
-                    <form
-                      name="contact"
-                      method="POST"
-                      data-netlify="true"
-                      onSubmit={handleSubmit}
-                    >
-                      {/* Hidden input to tell Netlify which form is being submitted */}
-                      <input type="hidden" name="form-name" value="contact" />
+      {submitted ? (
+        <SuccessMessage>
+          Merci pour votre message! Nous vous contacterons bientôt.
+        </SuccessMessage>
+      ) : (
+        <form
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const form = e.target as HTMLFormElement;
+            const formData = new FormData(form);
+            fetch(form.action, {
+              method: form.method,
+              body: formData,
+            })
+              .then(() => setSubmitted(true))
+              .catch((err) => console.error('Error submitting form:', err));
+          }}
+        >
+          <input type="hidden" name="form-name" value="contact" />
 
-                      <BootstrapForm.Group className="mb-3">
-                        <BootstrapForm.Label>Nom Complet</BootstrapForm.Label>
-                        <BootstrapForm.Control
-                          type="text"
-                          name="name"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.name}
-                          isInvalid={touched.name && !!errors.name}
-                        />
-                        <BootstrapForm.Control.Feedback type="invalid">
-                          {errors.name}
-                        </BootstrapForm.Control.Feedback>
-                      </BootstrapForm.Group>
+          <FormGroup>
+            <label htmlFor="name">Nom Complet</label>
+            <input type="text" name="name" id="name" required />
+          </FormGroup>
 
-                      <BootstrapForm.Group className="mb-3">
-                        <BootstrapForm.Label>Email</BootstrapForm.Label>
-                        <BootstrapForm.Control
-                          type="email"
-                          name="email"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.email}
-                          isInvalid={touched.email && !!errors.email}
-                        />
-                        <BootstrapForm.Control.Feedback type="invalid">
-                          {errors.email}
-                        </BootstrapForm.Control.Feedback>
-                      </BootstrapForm.Group>
+          <FormGroup>
+            <label htmlFor="email">Email</label>
+            <input type="email" name="email" id="email" required />
+          </FormGroup>
 
-                      <BootstrapForm.Group className="mb-3">
-                        <BootstrapForm.Label>Message</BootstrapForm.Label>
-                        <BootstrapForm.Control
-                          as="textarea"
-                          rows={5}
-                          name="message"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.message}
-                          isInvalid={touched.message && !!errors.message}
-                        />
-                        <BootstrapForm.Control.Feedback type="invalid">
-                          {errors.message}
-                        </BootstrapForm.Control.Feedback>
-                      </BootstrapForm.Group>
+          <FormGroup>
+            <label htmlFor="message">Message</label>
+            <textarea name="message" id="message" rows={5} required></textarea>
+          </FormGroup>
 
-                      <div className="d-grid">
-                        <Button
-                          variant="primary"
-                          type="submit"
-                          disabled={isSubmitting}
-                        >
-                          <Send className="me-2" />
-                          {isSubmitting ? 'Envoi en cours...' : 'Envoyer Message'}
-                        </Button>
-                      </div>
-                    </form>
-                  )}
-                </Formik>
-              </Card.Body>
-            </Card>
-          )}
-        </Col>
-      </Row>
-    </Container>
+          <SubmitButton type="submit">
+            <Send className="me-2" />
+            Envoyer Message
+          </SubmitButton>
+        </form>
+      )}
+    </ContactContainer>
   );
 };
 
 export default Contact;
+
+// Styled Components
+
+const ContactContainer = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+`;
+
+const ContactHeader = styled.div`
+  text-align: center;
+  margin-bottom: 40px;
+
+  h1 {
+    font-size: 2.5rem;
+  }
+`;
+
+const ContactInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+`;
+
+const InfoItem = styled.div`
+  display: flex;
+  align-items: center;
+  width: 30%;
+
+  .icon {
+    color: #007bff;
+    margin-right: 10px;
+  }
+
+  h5 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  p {
+    margin: 0;
+  }
+`;
+
+const SuccessMessage = styled.div`
+  background-color: #28a745;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  border-radius: 5px;
+  margin-bottom: 20px;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+`;
+
+const SubmitButton = styled.button`
+  width: 100%;
+  padding: 12px;
+  font-size: 1.2rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+  }
+`;
