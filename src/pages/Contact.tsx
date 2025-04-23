@@ -60,29 +60,9 @@ const Contact: React.FC = () => {
                   initialValues={{ name: '', email: '', message: '' }}
                   validationSchema={ContactSchema}
                   onSubmit={(values, { setSubmitting }) => {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.setAttribute('data-netlify', 'true');
-                    form.setAttribute('hidden', 'true');
-                    form.setAttribute('name', 'contact');
-
-                    Object.entries(values).forEach(([key, value]) => {
-                      const input = document.createElement('input');
-                      input.name = key;
-                      input.value = value;
-                      form.appendChild(input);
-                    });
-
-                    const hiddenInput = document.createElement('input');
-                    hiddenInput.name = 'form-name';
-                    hiddenInput.value = 'contact';
-                    form.appendChild(hiddenInput);
-
-                    document.body.appendChild(form);
-                    form.submit();
-                    document.body.removeChild(form);
+                    // Netlify handles this form submission
+                    setSubmitting(true);
                     setSubmitted(true);
-                    setSubmitting(false);
                   }}
                 >
                   {({
@@ -100,6 +80,7 @@ const Contact: React.FC = () => {
                       data-netlify="true"
                       onSubmit={handleSubmit}
                     >
+                      {/* Hidden input to tell Netlify which form is being submitted */}
                       <input type="hidden" name="form-name" value="contact" />
 
                       <BootstrapForm.Group className="mb-3">
@@ -171,4 +152,3 @@ const Contact: React.FC = () => {
 };
 
 export default Contact;
-  
