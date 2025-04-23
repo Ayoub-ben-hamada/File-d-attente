@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button, Alert, Card } from 'react-bootstrap';
+import { Container, Row, Col, Button, Alert, Card, Form as BootstrapForm } from 'react-bootstrap';
 import { Envelope, Telephone, GeoAlt, Send } from 'react-bootstrap-icons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -18,7 +18,7 @@ const Contact: React.FC = () => {
       <Row className="justify-content-center">
         <Col lg={8}>
           <h1 className="text-center mb-5">Contactez-Nous</h1>
-          
+
           <Row className="g-4 mb-5">
             <Col md={4}>
               <div className="d-flex align-items-center mb-3">
@@ -60,11 +60,29 @@ const Contact: React.FC = () => {
                   initialValues={{ name: '', email: '', message: '' }}
                   validationSchema={ContactSchema}
                   onSubmit={(values, { setSubmitting }) => {
-                    setTimeout(() => {
-                      console.log(values); // Ici vous enverriez les données à votre API
-                      setSubmitted(true);
-                      setSubmitting(false);
-                    }, 400);
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.setAttribute('data-netlify', 'true');
+                    form.setAttribute('hidden', 'true');
+                    form.setAttribute('name', 'contact');
+
+                    Object.entries(values).forEach(([key, value]) => {
+                      const input = document.createElement('input');
+                      input.name = key;
+                      input.value = value;
+                      form.appendChild(input);
+                    });
+
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.name = 'form-name';
+                    hiddenInput.value = 'contact';
+                    form.appendChild(hiddenInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                    document.body.removeChild(form);
+                    setSubmitted(true);
+                    setSubmitting(false);
                   }}
                 >
                   {({
@@ -76,10 +94,17 @@ const Contact: React.FC = () => {
                     handleSubmit,
                     isSubmitting
                   }) => (
-                    <Form onSubmit={handleSubmit}>
-                      <Form.Group className="mb-3">
-                        <Form.Label>Nom Complet</Form.Label>
-                        <Form.Control
+                    <form
+                      name="contact"
+                      method="POST"
+                      data-netlify="true"
+                      onSubmit={handleSubmit}
+                    >
+                      <input type="hidden" name="form-name" value="contact" />
+
+                      <BootstrapForm.Group className="mb-3">
+                        <BootstrapForm.Label>Nom Complet</BootstrapForm.Label>
+                        <BootstrapForm.Control
                           type="text"
                           name="name"
                           onChange={handleChange}
@@ -87,14 +112,14 @@ const Contact: React.FC = () => {
                           value={values.name}
                           isInvalid={touched.name && !!errors.name}
                         />
-                        <Form.Control.Feedback type="invalid">
+                        <BootstrapForm.Control.Feedback type="invalid">
                           {errors.name}
-                        </Form.Control.Feedback>
-                      </Form.Group>
+                        </BootstrapForm.Control.Feedback>
+                      </BootstrapForm.Group>
 
-                      <Form.Group className="mb-3">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
+                      <BootstrapForm.Group className="mb-3">
+                        <BootstrapForm.Label>Email</BootstrapForm.Label>
+                        <BootstrapForm.Control
                           type="email"
                           name="email"
                           onChange={handleChange}
@@ -102,14 +127,14 @@ const Contact: React.FC = () => {
                           value={values.email}
                           isInvalid={touched.email && !!errors.email}
                         />
-                        <Form.Control.Feedback type="invalid">
+                        <BootstrapForm.Control.Feedback type="invalid">
                           {errors.email}
-                        </Form.Control.Feedback>
-                      </Form.Group>
+                        </BootstrapForm.Control.Feedback>
+                      </BootstrapForm.Group>
 
-                      <Form.Group className="mb-3">
-                        <Form.Label>Message</Form.Label>
-                        <Form.Control
+                      <BootstrapForm.Group className="mb-3">
+                        <BootstrapForm.Label>Message</BootstrapForm.Label>
+                        <BootstrapForm.Control
                           as="textarea"
                           rows={5}
                           name="message"
@@ -118,22 +143,22 @@ const Contact: React.FC = () => {
                           value={values.message}
                           isInvalid={touched.message && !!errors.message}
                         />
-                        <Form.Control.Feedback type="invalid">
+                        <BootstrapForm.Control.Feedback type="invalid">
                           {errors.message}
-                        </Form.Control.Feedback>
-                      </Form.Group>
+                        </BootstrapForm.Control.Feedback>
+                      </BootstrapForm.Group>
 
                       <div className="d-grid">
-                        <Button 
-                          variant="primary" 
-                          type="submit" 
+                        <Button
+                          variant="primary"
+                          type="submit"
                           disabled={isSubmitting}
                         >
                           <Send className="me-2" />
                           {isSubmitting ? 'Envoi en cours...' : 'Envoyer Message'}
                         </Button>
                       </div>
-                    </Form>
+                    </form>
                   )}
                 </Formik>
               </Card.Body>
