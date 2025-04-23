@@ -154,29 +154,34 @@ export default function Contact() {
     <div>
       <h1>Contact Page</h1>
       <p>This is the contact page.</p>
-      <form 
-      name="contact"
-      method="POST" 
-      data-netlify="true"
-      onSubmit={(e) => { e.preventDefault(); console.log('Form submitted'); }}>
-      <input type="hidden" name="form-name" value="contact" />
-      <div>
-        <label>Name:</label>
-        <input type="text" name="name" required />
-      </div>
 
-      <div>
-        <label htmlFor="email">email</label><br ></br>
-        <input type="email" name="email"  id="email" required />
-      </div>
+      <form
+        name="contact"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+      >
+        {/* Hidden fields */}
+        <input type="hidden" name="form-name" value="contact" />
+        <input type="hidden" name="bot-field" />
 
-      <div>
-        <label >any comments</label><br ></br>
-        <textarea  name="comments"></textarea>
-      </div>
-      
-      <button type="submit">Submit</button>  
+        <div>
+          <label>Name:</label>
+          <input type="text" name="name" required />
+        </div>
+
+        <div>
+          <label htmlFor="email">Email:</label><br />
+          <input type="email" name="email" id="email" required />
+        </div>
+
+        <div>
+          <label>Any comments:</label><br />
+          <textarea name="comments"></textarea>
+        </div>
+
+        <button type="submit">Submit</button>
       </form>
     </div>
-);
+  );
 }
